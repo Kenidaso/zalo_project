@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const port = 1337;
+const port = process.env.PORT || 1337;
 const app = express();
 
 app.post('/zalo', (req, res) => {
