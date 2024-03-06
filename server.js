@@ -1,26 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const request = require('request');
 const port = process.env.PORT || 1337;
 const app = express();
 app.use(bodyParser.json());
 
+const headers = {
+    'access_token': 'jYJKNz24ooYz9DfQrOJ3BBWhsL_Gd9OnuJRQGFRPcZU49DKudlQkB91MqnhufgWkw5B4Cl-Rm5p6EvX8_CxSE-8XhI7LxhS0vW-h1jMZj12-GwWCbAdPDezQdaBbcSz8ytY2QFEMcN7BE_9Q-CQAHfDexaVunxOymHRkCkJ6gYZC4-89qRw5UzGUxMkuzu5gh1_-NxZoiMgI6Vz6ZigEDxKXn0M2_AbohJgtNPdHpLsy0zLajzcNSe8cqNcu-unEZ3Q8IfB5c52-2lnuXUcKJQu1_b_8wkP8t3kOCxVXsmEIB8CPX-h1088xtpFjvxG0X1Nj997TZpZu6yehoTgnNQ8I_qkl_Bz0XWYXH9F1yLQ64-z2hxAMQw9eva6Ni8joW476IEsPW3cBDUn8XDk8UBKXxsA6pOzcNvafGzsJpYy'
+};
+const options = {
+    url: 'https://openapi.zalo.me/v2.0/oa/listrecentchat?data=%7B%22offset%22%3A0%2C%22count%22%3A5%7D',
+    headers: headers
+};
 
+function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+        console.log("body callback: ",body);
+    }
+}
 
 app.post('/zalo', (req, res) => {
   console.log(req.body);
   res.json(req.body);
-  const response = await fetch('https://openapi.zalo.me/v2.0/oa/listrecentchat?data=%7B%22offset%22%3A0%2C%22count%22%3A5%7D', 
-  {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      "access_token": "m18IU9c9ModB4Xnzd8bJBSuT7tYPaIjLbbymUu6q5MgRNYPTrffeVSLBNspskdT__4bvMVQDDNJnJJ9YeguIT_jAE571YWXXoMj6TEsEPbVZGK1avgrqJ_5L9d34XZPFoc4PUfcaDqkQO0qQjOW7AP967mZ6fIyWaLyZ3eAaFo7QSWq2_vec0lWCQbFom6zJnGPdK97sN0QPEqWwalfGBv09UI6gdZSMkGXz0OtuRo3P8tmoqFD4EFOeNXR4taL4nICFSFpYGd_I2d1MrvfTOS81K4hno7jEnHXRHPFKQcom64T5e_PfHeSRGH2YY7P3g6DSVgtsLd6OO5nBYf5x7Az0V1EZWM87ZXekC9xX8pp9EXyovi4I4hK63o6P_1Kqini1QOA8C6w3IJbgqRGNV_ic1cvXOA9_PPIUNYu",
-    },
-    body: JSON.stringify(data), 
-  return response.json();
-});
-  console.log("KMG", response);
+  request(options, callback);
 }
 
 
