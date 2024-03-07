@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
@@ -6,29 +7,53 @@ const app = express();
 app.use(bodyParser.json());
 
 const headers = {
-    'access_token': 'FzLD22cEONKqrKCDB8vfSJ7QG0WfbZmaHSLv52UIAIzdarm-VxCSA3QYLbahymv6ODbwOYNwJKv1sWrI0l9HTHlcFWe6jbmqI9TtA02K9XbVfqbW9w4BJcsdTN5mbLbY6e0vH7YwL7GJg0flTVifGGpyMqCNpJKdLVnt6qZwBWWkoKvmBE8z57BsP2GKs2euVVrf4Xdr5WHkubCU5-CTP7xlM6e4tpDXIlCPGLRREduu_rbjPSaKJplPQ5Dx_JDxFEK4LbNDUqq0uJHH7C1dQ4lR61KKttKbUCKc52EJSGvycJmq6yXGEGpeFLrfkbqa38ujFcgsUmTol0i46h591NcZPHqGepLXKwTg7Whe12v0qbCoLubz63QJE3DlYKKU69uHRcM6GaCJWWupLDXbCnpb3HTKKIzY6aaacMHo'
+    'access_token': process.env.access_token,
 };
 const options = {
-    url: 'https://openapi.zalo.me/v2.0/oa/listrecentchat?data=%7B%22offset%22%3A0%2C%22count%22%3A5%7D',
+    url: 'https://openapi.zalo.me/v2.0/oa/listrecentchat?data=%7B%22offset%22%3A0%2C%22count%22%3A1%7D',
     headers: headers
 };
 
-function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
-        console.log("body callback yeu anh K: ",body);
-        return body;
-    }
-
-}
 
 app.post('/zalo', (req, res) => {
   console.log(req.body);
+  let latestMessends = request(options, readDataMess);
+  // console.log("list tin nhan: ",latestMessends);
   res.json(req.body);
-  request(options, callback);
-}
-
+  let reqToZalo = request(optionsReq, function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+        console.log(body + response.statusCode);
+    }
+  });
+  // console.log("day la req to zalo 3: ", reqToZalo);
+})
 
 const server = app.listen(port, (error) => {
     if (error) return console.log(`Error: ${error}`);
     console.log(`Server listening on port: ${port}`);
 });
+
+//3
+let user_id = '8189000477219660231';
+let user_name = 'Trung Kiên';
+let contentMess = {
+    "recipient": {
+        "user_id": user_id,
+    }, 
+    "message": {
+        "text": "200" + 
+    }
+};
+let optionsReq = {
+    url: 'https://openapi.zalo.me/v3.0/oa/message/cs',
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(contentMess)
+};
+
+function readDataMess(error, response, body) {
+    if (!error && response.statusCode == 200) {
+        // console.log("body readDataMess: ",body);
+        return body;
+    }
+}
