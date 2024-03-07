@@ -16,7 +16,9 @@ const options = {
 function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
         console.log("body callback yeu anh K: ",body);
+        return body;
     }
+
 }
 
 app.post('/zalo', (req, res) => {
